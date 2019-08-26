@@ -1,2 +1,2 @@
 # ASP.Net_Login
-Samples of my portfolio
+Simple login auth in ASP.Net
