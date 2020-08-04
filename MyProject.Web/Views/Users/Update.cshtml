@@ -1,0 +1,161 @@
+﻿@model UsersModel
+@{
+    ViewBag.Title = "Update User";
+}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewBag.Title</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <form id="saveForm" asp-action="Update" method="post">
+            <div class="card">
+ 
+                <div class="card-body">
+                    @Html.ValidationSummary(true)
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label asp-for="full_name"></label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" asp-for="full_name" placeholder="Full Name" :class="{ 'border-danger':errors.has('full_name') }" v-validate="'required'">
+                            <span class="text-danger" v-show="errors.has('full_name')">Enter the Full Name</span>
+                        </div>
+                    </div>
+
+                    @if (User.Identity.GetUserCurrentRole() != RoleType.ADMIN)
+                    {
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="login_name"></label>
+                            </div>
+                            <div class="col-md-6">
+                                @Model.login_name
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="role"></label>
+                            </div>
+                            <div class="col-md-6 text-capitalize">
+                                @User.Identity.GetUserCurrentRole().ToString().ToLower()
+                            </div>
+                        </div>
+                    }
+
+                    else
+                    {
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="login_name"></label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" asp-for="login_name" placeholder="User Name" :class="{ 'border-danger':errors.has('login_name') }" v-validate="'required'">
+                                <span class="text-danger" v-show="errors.has('login_name')">Enter the User Name</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="role"></label>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" asp-for="role" :class="{ 'border-danger':errors.has('role') }" v-validate="'required'">
+                                    <option value="@RoleType.ADMIN">Admin</option>
+                                    <option value="@RoleType.Staff">Staff</option>
+                                </select>
+                                <span class="text-danger" v-show="errors.has('role')">Select User Role</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="active"></label>
+                            </div>
+                            <div class="col-md-6">
+                                <select asp-for="active" class="form-control" :class="{ 'border-danger':errors.has('active') }" v-validate="'required'">
+                                    <option value="true">Active</option>
+                                    <option value="false">Not Active</option>
+                                </select>
+                                <span class="text-danger" v-show="errors.has('active')">Select User Status</span>
+                            </div>
+                        </div>
+                    }
+
+
+
+                    <hr class="sidebar-divider my-4">
+
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label for="change_password">Reset Password</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="checkbox" id="change_password" :value="true" v-model="change_password">
+                        </div>
+                    </div>
+
+
+                    <template v-if="change_password">
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label asp-for="password"></label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="password" class="form-control" asp-for="password" placeholder="Password" v-model="password" ref="password" :class="{ 'border-danger':errors.has('password') }" v-validate="'required'">
+                                <span class="text-danger" v-if="errors.has('password')">The password field is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-md-2">
+                                <label>Confirm Password</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input name="password_confirmation" type="password" class="form-control" placeholder="Confirm Password"
+                                       :class="{ 'border-danger':errors.has('password_confirmation') }" v-validate="'required|confirmed:password'" data-vv-as="password">
+                                <template v-if="errors.has('password_confirmation')">
+                                    <span class="text-danger" v-show="errors.has('password_confirmation:required')">Please confirm password.</span>
+                                    <span class="text-danger" v-show="errors.has('password_confirmation:confirmed')">The password confirmation does not match.</span>
+                                </template>
+                            </div>
+                        </div>
+
+                    </template>
+
+                    <div class="row mt-5">
+                        <div class="col-6 text-left">
+                            <a asp-controller="Users" asp-action="Index" class="btn btn-secondary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span class="text">Back</span>
+                            </a>
+                        </div>
+                        <div class="col-6 text-right">
+                            <a href="#" class="btn btn-success btn-icon-split" @@click.prevent="saveForm">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="text">Update</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/vue-settings.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Users Management";
+}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewBag.Title</h1>
+    <a asp-controller="Users" asp-action="Create" class="d-none d-sm-inline-block btn btn-sm btn-primary">
+        <i class="fas fa-plus fa-sm text-white-50"></i> New User
+    </a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>User Name</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (User x in ViewBag.allUsers)
+                    {
+                        <tr>
+                            <td>@x.full_name</td>
+                            <td>@x.login_name</td>
+                            <td class="text-capitalize">
+                                @{
+                                    var sortedRoles = x.Roles.OrderBy(r => r.role);
+                                    var roleNames = sortedRoles.Select(r => r.role);
+                                }
+                                @string.Join(", ", roleNames).ToString().ToLower()
+
+                            </td>
+                            <td>
+                                @if (@x.active)
+                                {<span> Active </span> }
+                                else
+                                { <span> Not Active </span>}
+                            </td>
+
+                            <td class="text-right">
+                                <a asp-controller="Users" asp-action="Update" asp-route-id="@x.id" class="btn btn-primary">
+                                    <span class="icon text-white">
+                                        <i class="far fa-edit"></i>
+                                    </span>
+                                </a>
+
+
+                                @if (@x.id != User.Identity.GetUserID()) {
+                                <a href="#" class="btn btn-danger" data-toggle="modal" :data-target="'#DeleteModal' + @x.id">
+                                    <span class="icon text-white">
+                                        <i class="far fa-trash-alt"></i>
+                                    </span>
+                                </a>
+                                }
+
+                                <div class="modal fade" :id="'DeleteModal' + @x.id" tabindex="-1" role="dialog" aria-labelledby="DeleteModal" aria-hidden="true" style="display: none;">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="DeleteModal">Delete User</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body text-left">Are you sure you want to Delete @x.full_name?</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+
+                                                <form asp-action="Delete" asp-route-id="@x.id" data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-failure="failed">
+
+                                                    <button type="submit" class="btn btn-danger">
+                                                        <span class="text-white">
+                                                            Delete
+                                                        </span>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        function deleteItem(form) {
+            $(form).parents('tr').remove();
+            $('.modal-backdrop').remove();
+        }
+
+        failed = function (xhr) {
+            alert(`You are not allowed to delete this user. There is still task(s) assigned to this user.`);
+        };
+    </script>
+
+    <script src="~/js/vue-settings.js" asp-append-version="true"></script>
+
+}
+

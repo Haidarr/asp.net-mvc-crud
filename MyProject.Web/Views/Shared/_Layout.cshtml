@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.WebName = "My Project";
+    string Controller = ViewContext.RouteData.Values["Controller"].ToString().ToLowerInvariant();
+    string Action = ViewContext.RouteData.Values["Action"].ToString().ToLowerInvariant();
+    string currentPage = $"{Controller}.{Action}";
+}
+<!DOCTYPE html>
+<html>
+    <head>
+    
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>@ViewData["Title"] - @ViewBag.WebName</title>
+        <link href="~/images/favicon.ico" type="image/x-icon" rel="shortcut icon">
+
+        @* Bootstrap & FontAwesome *@
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+        <link href="~/lib/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+        <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
+        <link href="~/lib/jqueryui/themes/base/jquery-ui.min.css" rel="stylesheet">
+    
+        @* Site *@
+        <link href="~/css/site.css" rel="stylesheet" asp-append-version="true">
+        @RenderSection("Styles", false)
+    </head>
+
+    <body>
+        <!-- Page Wrapper -->
+        <div id="wrapper">
+
+            <!-- Sidebar -->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark">
+
+                <!-- Sidebar - Logo/Site Name -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
+                    @ViewBag.WebName
+                </a>
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+                <!-- Project Heading -->
+                <div class="sidebar-heading">
+                    Projects
+                </div>
+
+                <!-- Nav Item - Project -->
+                <li class="nav-item">
+                    <a class="nav-link  @(currentPage == "home.index" || currentPage == "home.update" || currentPage == "home.view" ? "current" : "")" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tasks List</span>
+                    </a>
+                </li>
+
+                @* Only users Admin role able to Create task*@
+                @if (User.Identity.GetUserCurrentRole() == RoleType.ADMIN)
+                {
+                    <!-- Nav Item - Project -->
+                    <li class="nav-item">
+                        <a class="nav-link @(currentPage == "home.create" ? "current" : "")" asp-controller="Home" asp-action="Create">
+                            <i class="fas fa-plus"></i>
+                            <span>New Task</span>
+                        </a>
+                    </li>
+                }
+
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+
+
+                @*Only Admin can manage Users*@
+                @if (User.Identity.GetUserCurrentRole() == RoleType.ADMIN)
+                {
+                    <!-- Users Heading -->
+                    <div class="sidebar-heading">
+                        Users Management
+                    </div>
+
+
+                    <!-- Nav Item - Users -->
+                    <li class="nav-item">
+                        <a class="nav-link @(currentPage == "users.index" || currentPage == "users.update" ? "current" : "")" asp-controller="Users" asp-action="Index">
+                            <i class="fas fa-users"></i>
+                            <span>Users List</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(currentPage == "users.create" ? "current" : "")" asp-controller="Users" asp-action="Create">
+                            <i class="fas fa-user-plus"></i>
+                            <span>New User</span>
+                        </a>
+                    </li>
+
+                    <!-- Divider -->
+                    <hr class="sidebar-divider d-none d-md-block">
+                }
+
+            </ul>
+            <!-- End of Sidebar -->
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+
+                <!-- Main Content -->
+                <div id="content">
+
+                    <!-- Topbar -->
+                    <nav class="navbar navbar-expand navbar-light bg-white border-bottom top-nav mb-3">
+
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <button class="btn btn-link d-md-none rounded-circle mr-3 sidebar-toggle">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <partial name="_LoginPartial" />
+
+                    </nav>
+
+                    <div class="container-fluid" id="app">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        @* Polyfills for IE or Android 4.x *@
+        <script src="~/lib/es6-promise/dist/es6-promise.auto.min.js"></script>
+
+        @* jQuery *@
+        <script src="~/lib/jquery/jquery.min.js"></script>
+        <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+        <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+        @* Site UI *@
+        <script src="~/js/site.js"></script>
+
+        @* Bootstrap *@
+        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="~/lib/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+        @* DataTable *@
+        <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+        <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
+
+
+        @* Vue *@
+        <script src="~/lib/vue/vue.min.js"></script>
+        <script src="~/lib/vee-validate/vee-validate.min.js"></script>
+
+
+        <script>
+            $(document).ready(function () {
+                $('#dataTable').DataTable();
+                $('.datepicker').datepicker();
+            });
+
+            Vue.use(VeeValidate);
+        </script>
+
+        @RenderSection("Scripts", required: false)
+    </body>
+</html>

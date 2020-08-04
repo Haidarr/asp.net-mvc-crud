@@ -1,0 +1,125 @@
+﻿@{
+    ViewBag.Title = "All Tasks";
+}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewBag.Title</h1>
+    @* Only Admin able to Add*@
+    @if (User.Identity.GetUserCurrentRole() != RoleType.Staff)
+    {
+        <a asp-controller="Home" asp-action="Create" class="d-none d-sm-inline-block btn btn-sm btn-primary">
+            <i class="fas fa-plus fa-sm text-white-50"></i> New Task
+        </a>
+    }
+</div>
+
+
+<div class="card mb-4">
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Deadline</th>
+                        <th>Assign To</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (Project x in ViewBag.allTasks)
+                    {
+                        <tr>
+                            <td>@x.project_name</td>
+                            <td>@x.project_deadline</td>
+                            <td>
+                                @foreach (User ur in ViewBag.allUsers)
+                                {
+                                    if (x.assign_to == ur.id)
+                                    {
+                                        @ur.full_name
+                                    }
+
+                                }
+                            </td>
+                            <td class="text-right">
+                                @* Only users with Admin and Data-Entry roles are able to Delete*@
+                                @if (User.Identity.GetUserCurrentRole() != RoleType.Staff)
+                                {
+                                    <a asp-controller="Home" asp-action="Update" asp-route-id="@x.id" class="btn btn-primary">
+                                        <span class="icon text-white">
+                                            <i class="far fa-edit"></i>
+                                        </span>
+                                    </a>
+
+                                    <a href="#" class="btn btn-danger" data-toggle="modal" :data-target="'#DeleteModal' + @x.id">
+                                        <span class="icon text-white">
+                                            <i class="far fa-trash-alt"></i>
+                                        </span>
+                                    </a>
+
+                                    <div class="modal fade" :id="'DeleteModal' + @x.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Delete Vendor/End-User</h5>
+                                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">×</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body text-left">Are you sure you want to Delete @x.project_name?</div>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+
+                                                    <form asp-action="Delete" asp-route-id="@x.id" data-ajax="true" data-ajax-success="deleteItem(this)" data-ajax-failure="failed">
+
+                                                        <button type="submit" class="btn btn-danger">
+                                                            <span class="text-white">
+                                                                Delete
+                                                            </span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else { 
+                                    <a asp-controller="Home" asp-action="View" asp-route-id="@x.id" class="btn btn-info">
+                                        <span class="icon text-white">
+                                            <i class="far fa-eye"></i>
+                                        </span>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        function deleteItem(form) {
+            $(form).parents('tr').remove();
+            $('.modal-backdrop').remove();
+        }
+
+        failed = function (xhr) {
+            alert(`An error occurred. Please try again later.`);
+        };
+
+    </script>
+
+    <script src="~/js/vue-settings.js" asp-append-version="true"></script>
+
+}

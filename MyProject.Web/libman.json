@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.3.1",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "jquery-ajax-unobtrusive@3.2.6",
+      "destination": "wwwroot/lib/jquery-ajax-unobtrusive"
+    },
+    {
+      "library": "lockr@0.8.5",
+      "destination": "wwwroot/lib/lockr/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@4.5.0",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "bootstrap-datepicker@1.9.0",
+      "destination": "wwwroot/lib/bootstrap-datepicker/"
+    },
+    {
+      "library": "datatables@1.10.21",
+      "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "library": "font-awesome@5.13.1",
+      "destination": "wwwroot/lib/font-awesome/"
+    },
+    {
+      "library": "jqueryui@1.12.1",
+      "destination": "wwwroot/lib/jqueryui/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "es6-promise@4.2.4",
+      "destination": "wwwroot/lib/es6-promise/"
+    },
+    {
+      "library": "vue@2.5.16",
+      "destination": "wwwroot/lib/vue/"
+    },
+    {
+      "library": "vee-validate@2.0.6",
+      "destination": "wwwroot/lib/vee-validate/"
+    }
+  ]
+}

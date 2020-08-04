@@ -1,0 +1,97 @@
+﻿@model ProjectsModel
+@{
+    ViewBag.Title = "New Task";
+}
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewBag.Title</h1>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <form id="saveForm" asp-action="Create" method="post">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label asp-for="project_name"></label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" asp-for="project_name" :class="{ 'border-danger':errors.has('project_name') }" v-validate="'required'">
+                            <span class="text-danger" v-show="errors.has('project_name')">Enter Project Name</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label asp-for="project_description"></label>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea class="form-control" rows="5" asp-for="project_description" placeholder="Task lsit:...,&#x0a;1- Redesign the homepage...&#x0a;2- Add three new pages..." :class="{ 'border-danger':errors.has('project_description') }" v-validate="'required'"></textarea>
+                            <span class="text-danger" v-show="errors.has('project_description')">Enter Project's Descriptions.</span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label asp-for="assign_to"></label>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" asp-for="assign_to" :class="{ 'border-danger':errors.has('assign_to') }" v-validate="'required'">
+                                @foreach (User usr in @ViewBag.allUsers)
+                                {
+                                    <option value="@usr.id">@usr.full_name</option>
+                                }
+                            </select>
+                            <span class="text-danger" v-show="errors.has('assign_to')">Select user.</span>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <label asp-for="project_deadline"></label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" data-date-format="mm/dd/yyyy" class="form-control datepicker" asp-for="project_deadline" :class="{ 'border-danger':errors.has('project_deadline') }" v-validate="'required'">
+                            <span class="text-danger" v-show="errors.has('project_deadline')">Enter Project's Deadline.</span>
+                        </div>
+                    </div>
+
+
+
+                    
+
+
+
+                    <div class="row mt-5">
+                        <div class="col-6 text-left">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span class="text">Back</span>
+                            </a>
+                        </div>
+
+                        <div class="col-6 text-right">
+                            <a href="#" class="btn btn-success btn-icon-split" @@click.prevent="saveForm">
+                                <span class="icon text-white-70">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span class="text">Create</span>
+
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/vue-settings.js" asp-append-version="true"></script>
+}
