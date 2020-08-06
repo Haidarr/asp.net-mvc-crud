@@ -1,9 +1,9 @@
 # MyProject - Asp.Net MVC CRUD
-This is a basic web application written in C# and VueJS. 
+A basic web application written in C# and VueJS. 
 
 Its main feature is to create users with different roles and assign each user a project/task.
 
-Admin role can Add/Delete/Modify users and also create tasks for them. 
+Admin role can Add/Delete/Modify users and also Add/Delete/Modify tasks and assign them to users. Staff role is to edit profile, view their tasks. 
 
 
 ## Getting Started
@@ -17,13 +17,10 @@ Open the solution in Visual Studio 2019.
 
 
 ## Prepare your DB
-Got to:
-`db/myproject-tables.sql`
-
 - Open pgAdmin (PostgreSQL). 
-- Create your database and name it myproject.
-- Set you database username and password as mentioned in myproject-tables.sql
-- Copy all the myproject-tables and run it in pgAdmin. 
+- Create your database and name it 'myproject'.
+- Set your database username and password as mentioned in `db/myproject-tables.sql`.
+- Copy all the myproject-tables from `db/myproject-tables.sql` and run it in pgAdmin. 
 
 
 ## Use MyProject
